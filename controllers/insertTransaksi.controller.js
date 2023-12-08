@@ -5,6 +5,13 @@ const insertTransaksi = async (req, res) => {
     try {
         const { tanggal, jenisMobil, platNomor, detailKerusakanData, statusPembayaran, statusSelesai } = req.body;
 
+        //filteredDetailKerusakanData
+        for (let i = detailKerusakanData.length - 1; i >= 0; i--) {
+            if (detailKerusakanData[i].jenisKerusakan === "") {
+                detailKerusakanData.splice(i, 1);
+            }
+        }
+
         // Calculate the total price from detail kerusakan
         const totalHarga = detailKerusakanData.reduce(
             (total, kerusakan) => total + kerusakan.hargaPerbaikan,

@@ -13,17 +13,16 @@ const addDetailKerusakan = async (req, res) => {
             });
         }
 
-        const kerusakanData = detail_kerusakan.map((item) => ({
-            kerusakan: item.kerusakan,
-            harga_perbaikan: item.harga_perbaikan
-        }))
+        const kerusakanData = detail_kerusakan.filter(
+            (item) => (item.kerusakan !== "") && (item.harga_perbaikan !== 0)
+                && (item.harga_perbaikan !== null) && (item.harga_perbaikan !== undefined)
+        )
 
-        const totalHarga = kerusakanData.reduce((total, item) => total + item.harga_perbaikan, existingTransaksi.total_harga)
+        const totalHarga = kerusakanData.reduce((total, item) => total + item.harga_perbaikan, 0)
 
         existingTransaksi.total_harga = totalHarga;
-        existingTransaksi.detail_kerusakan.push(...kerusakanData);
+        existingTransaksi.detail_kerusakan = kerusakanData;
         await existingTransaksi.save();
-
         res.json({
             success: true,
             result: existingTransaksi,
